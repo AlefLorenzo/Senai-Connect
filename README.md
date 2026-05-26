@@ -1,6 +1,4 @@
-Claro! Aqui está uma **descrição profissional, clara e pronta para GitHub** para o projeto **SENAI Connect**, alinhada com tudo que você construiu (rede social educacional, mobile + desktop, tudo funcional).
 
-Você pode usar **como `README.md`** ou como **descrição principal do repositório**.
 
 ---
 
@@ -97,18 +95,3 @@ Todos os elementos clicáveis executam ações reais, garantindo uma experiênci
 O sistema está preparado para evolução, testes automatizados e deploy em ambiente de produção.
 
 ---
-
-## 📄 Licença
-
-Este projeto foi desenvolvido para fins **educacionais e demonstrativos**.
-
----
-
-Se quiser, posso:
-
-* Ajustar o texto para **portfólio**
-* Criar uma versão **mais curta** (descrição do repositório)
-* Gerar um **README técnico** com instalação e execução
-* Escrever em **inglês**
-
-É só me dizer.
