@@ -1,0 +1,91 @@
+.home-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.stories-container {
+  display: flex;
+  overflow-x: auto;
+  padding: 16px;
+  margin-bottom: 0;
+}
+
+.stories-container::-webkit-scrollbar {
+  height: 4px;
+}
+
+.create-post-card {
+  padding: 16px;
+  margin-bottom: 0;
+}
+
+.create-post-top {
+  display: flex;
+  gap: 12px;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 12px;
+  margin-bottom: 12px;
+}
+
+.create-post-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+.create-post-input {
+  flex: 1;
+  background-color: var(--bg-main);
+  border: none;
+  border-radius: var(--radius-full);
+  padding: 0 16px;
+  font-size: 15px;
+  outline: none;
+}
+
+.create-post-input:hover {
+  background-color: #E4E6E9;
+}
+
+.create-post-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.create-post-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.create-post-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px;
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  font-weight: 600;
+  font-size: 14px;
+  transition: background-color 0.2s;
+}
+
+.create-post-btn:hover {
+  background-color: var(--bg-main);
+}
+
+.feed-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+@media (max-width: 600px) {
+  .create-post-btn span {
+    display: none;
+  }
+  .hide-mobile {
+    display: none;
+  }
+}

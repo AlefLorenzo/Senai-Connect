@@ -1,0 +1,72 @@
+.app-layout {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.main-content-wrapper {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+  margin-top: var(--header-height); /* if header is fixed */
+}
+
+.sidebar-container {
+  width: var(--sidebar-width);
+  height: calc(100vh - var(--header-height));
+  position: fixed;
+  left: 0;
+  top: var(--header-height);
+  background-color: var(--senai-blue-dark);
+  color: white;
+  overflow-y: auto;
+  transition: transform 0.3s ease;
+  z-index: 10;
+}
+
+.right-panel-container {
+  width: var(--right-panel-width);
+  height: calc(100vh - var(--header-height));
+  position: fixed;
+  right: 0;
+  top: var(--header-height);
+  padding: 16px;
+  overflow-y: auto;
+  z-index: 10;
+}
+
+.center-feed {
+  flex: 1;
+  margin-left: var(--sidebar-width);
+  margin-right: var(--right-panel-width);
+  padding: 24px;
+  max-width: 740px;
+  margin: 0 auto;
+  overflow-y: auto;
+  height: calc(100vh - var(--header-height));
+}
+
+/* Fix margins when sidebar/right panel exist */
+@media (min-width: 993px) {
+  .center-feed {
+    margin-left: max(var(--sidebar-width), calc(50% - 370px));
+    margin-right: var(--right-panel-width);
+  }
+}
+
+/* Mobile Adjustments */
+@media (max-width: 992px) {
+  .sidebar-container, .right-panel-container {
+    display: none;
+  }
+  
+  .center-feed {
+    margin-left: 0;
+    margin-right: 0;
+    width: 100%;
+    padding: 12px;
+    height: calc(100vh - var(--header-height) - var(--bottom-nav-height));
+  }
+}

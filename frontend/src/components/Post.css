@@ -1,0 +1,375 @@
+.post-card {
+  padding: 0;
+  overflow: hidden;
+}
+
+.post-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+}
+
+.post-user-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.post-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+.post-user-name {
+  font-weight: 600;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.role-badge {
+  background-color: var(--senai-blue-light);
+  color: var(--senai-blue-primary);
+  font-size: 10px;
+  font-weight: bold;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.post-time {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.icon-btn-transparent {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s;
+}
+
+.icon-btn-transparent:hover {
+  background-color: var(--bg-main);
+}
+
+.post-content {
+  padding: 0 16px 16px;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.post-attachment-doc {
+  margin-top: 16px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background-color: #FAFAFA;
+}
+
+.doc-icon {
+  background-color: #FEEBEB;
+  padding: 12px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.doc-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.doc-name {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.doc-size {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.post-stats {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border-color);
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.likes-count {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.reactions-icons {
+  letter-spacing: -4px;
+}
+
+.post-actions {
+  display: flex;
+  padding: 4px 16px;
+}
+
+.action-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px 0;
+  color: var(--text-secondary);
+  font-weight: 600;
+  font-size: 14px;
+  border-radius: var(--radius-sm);
+  transition: all 0.2s;
+}
+
+.action-btn:hover {
+  background-color: var(--bg-main);
+}
+
+.action-btn.liked {
+  color: var(--senai-blue-primary);
+}
+
+@media (max-width: 600px) {
+  .action-btn span {
+    display: none;
+  }
+}
+
+/* Post options menu dropdown */
+.post-options-container {
+  position: relative;
+}
+
+.post-dropdown-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+  min-width: 120px;
+  display: flex;
+  flex-direction: column;
+  padding: 4px 0;
+}
+
+.post-dropdown-menu button {
+  background: none;
+  border: none;
+  padding: 8px 16px;
+  text-align: left;
+  font-size: 14px;
+  color: var(--text-primary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.post-dropdown-menu button:hover {
+  background-color: var(--bg-main);
+}
+
+.post-dropdown-menu button.delete-option {
+  color: var(--danger);
+}
+
+/* Edit post container */
+.edit-post-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.edit-post-textarea {
+  width: 100%;
+  min-height: 100px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 10px;
+  background-color: var(--bg-card);
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: 15px;
+  resize: vertical;
+}
+
+.edit-post-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+/* Comments section styling */
+.comments-section {
+  border-top: 1px solid var(--border-color);
+  padding: 16px;
+  background-color: rgba(0, 0, 0, 0.01);
+}
+
+.comments-header h4 {
+  margin: 0 0 12px;
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.comment-input-form {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.comment-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.comment-input-field {
+  flex: 1;
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  padding: 8px 16px;
+  font-size: 14px;
+  background-color: var(--bg-card);
+  color: var(--text-primary);
+}
+
+.comment-input-field:focus {
+  outline: none;
+  border-color: var(--senai-blue-primary);
+}
+
+.comment-send-btn {
+  background: none;
+  border: none;
+  color: var(--senai-blue-primary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  border-radius: 50%;
+}
+
+.comment-send-btn:hover:not(:disabled) {
+  background-color: var(--bg-main);
+}
+
+.comment-send-btn:disabled {
+  color: var(--text-secondary);
+  opacity: 0.5;
+  cursor: default;
+}
+
+.comments-loading, .no-comments {
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 14px;
+  padding: 8px 0;
+}
+
+.comments-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.comment-item {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+.comment-bubble-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.comment-bubble {
+  background-color: var(--bg-main);
+  border-radius: 12px;
+  padding: 8px 12px;
+}
+
+.comment-bubble-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2px;
+}
+
+.comment-user-name {
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--text-primary);
+}
+
+.delete-comment-btn {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 2px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.delete-comment-btn:hover {
+  color: var(--danger);
+  background-color: rgba(244, 67, 54, 0.1);
+}
+
+.comment-content-text {
+  margin: 0;
+  font-size: 13.5px;
+  color: var(--text-primary);
+  word-break: break-word;
+}
+
+.comment-time {
+  font-size: 11px;
+  color: var(--text-secondary);
+  padding-left: 8px;
+}
+
+.download-link {
+  font-size: 12px;
+  color: var(--senai-blue-primary);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.download-link:hover {
+  text-decoration: underline;
+}

@@ -1,0 +1,130 @@
+.header {
+  height: var(--header-height);
+  background-color: var(--bg-card);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  box-shadow: var(--shadow-sm);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+}
+
+.header-left {
+  width: var(--sidebar-width);
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  display: flex;
+  flex-direction: column;
+  font-weight: 800;
+  color: var(--senai-blue-dark);
+  line-height: 1;
+}
+
+.logo-text {
+  font-size: 20px;
+  font-style: italic;
+}
+
+.logo-sub {
+  font-size: 10px;
+  letter-spacing: 1px;
+}
+
+.header-center {
+  flex: 1;
+  max-width: 600px;
+  padding: 0 16px;
+}
+
+.search-bar {
+  display: flex;
+  align-items: center;
+  background-color: var(--bg-main);
+  border-radius: var(--radius-full);
+  padding: 8px 16px;
+}
+
+.search-bar input {
+  border: none;
+  background: transparent;
+  outline: none;
+  margin-left: 8px;
+  width: 100%;
+  font-size: 14px;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.icon-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: var(--bg-main);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-primary);
+  position: relative;
+  transition: background-color 0.2s;
+}
+
+.icon-btn:hover {
+  background-color: #E4E6E9;
+}
+
+.badge {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  background-color: var(--error);
+  color: white;
+  font-size: 11px;
+  font-weight: bold;
+  padding: 2px 5px;
+  border-radius: 10px;
+}
+
+.user-profile-sm {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: var(--radius-full);
+  transition: background-color 0.2s;
+}
+
+.user-profile-sm:hover {
+  background-color: var(--bg-main);
+}
+
+.user-profile-sm img {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+}
+
+.user-name {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+@media (max-width: 992px) {
+  .logo-text { font-size: 24px; color: white; }
+  .logo-sub { color: white; }
+  .header { background-color: var(--senai-blue-dark); color: white; }
+  .header-center { display: none; }
+  .user-name { display: none; }
+  .icon-btn { background-color: rgba(255,255,255,0.1); color: white; }
+}
