@@ -85,15 +85,7 @@ const Auth = () => {
             <input type="password" name="password" value={formData.password} onChange={handleChange} required />
           </div>
 
-          {!isLogin && (
-            <div className="form-group">
-              <label>Perfil</label>
-              <select name="role" value={formData.role} onChange={handleChange}>
-                <option value="Aluno">Aluno</option>
-                <option value="Professor">Professor</option>
-              </select>
-            </div>
-          )}
+          {/* Role selection removed, assigned automatically on backend */}
 
           <button type="submit" className="btn-primary" style={{width: '100%', marginTop: '16px'}} disabled={loading}>
             {loading ? 'Aguarde...' : (isLogin ? 'Entrar' : 'Criar Conta')}

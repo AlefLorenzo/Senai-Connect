@@ -1,8 +1,9 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Settings, MessageCircle, MoreHorizontal, Users, Calendar, MapPin, Mail, Sparkles, BookOpen } from 'lucide-react';
+import { Settings, MessageCircle, MoreHorizontal, Users, Calendar, MapPin, Mail, Sparkles, BookOpen, Camera, Link2, GraduationCap, Building } from 'lucide-react';
 import { AuthContext } from '../context/AuthContext';
 import Post from '../components/Post';
+import Avatar from '../components/Avatar';
 import './Profile.css';
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
@@ -27,6 +28,15 @@ const Profile = () => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [bioInput, setBioInput] = useState('');
   const [avatarInput, setAvatarInput] = useState('');
+  const [stateInput, setStateInput] = useState('');
+  const [cityInput, setCityInput] = useState('');
+  const [unitInput, setUnitInput] = useState('');
+  const [areaInput, setAreaInput] = useState('');
+  const [courseInput, setCourseInput] = useState('');
+  const [linksInput, setLinksInput] = useState('');
+  const [avatarFile, setAvatarFile] = useState(null);
+  const [avatarPreview, setAvatarPreview] = useState(null);
+  const avatarFileRef = useRef(null);
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
@@ -43,6 +53,12 @@ const Profile = () => {
           setProfileUser(data);
           setBioInput(data.bio || '');
           setAvatarInput(data.avatar || '');
+          setStateInput(data.state || '');
+          setCityInput(data.city || '');
+          setUnitInput(data.unit || '');
+          setAreaInput(data.area || '');
+          setCourseInput(data.course || '');
+          setLinksInput(data.links || '');
         }
       })
       .catch(err => console.error(err));
@@ -86,23 +102,79 @@ const Profile = () => {
     }
   }, [userId, isOwnProfile]);
 
+  const handleAvatarFileSelect = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    if (file.size > 5 * 1024 * 1024) {
+      alert('Imagem deve ter no máximo 5MB.');
+      return;
+    }
+    setAvatarFile(file);
+    const reader = new FileReader();
+    reader.onload = (ev) => setAvatarPreview(ev.target.result);
+    reader.readAsDataURL(file);
+  };
+
   const handleUpdateProfile = async (e) => {
     e.preventDefault();
     setSaving(true);
     try {
+      let finalAvatar = avatarInput;
+
+      // Upload avatar if a new file was selected
+      if (avatarFile) {
+        const reader = new FileReader();
+        const base64 = await new Promise((resolve) => {
+          reader.onload = (ev) => resolve(ev.target.result);
+          reader.readAsDataURL(avatarFile);
+        });
+
+        const uploadRes = await fetch(`${API_URL}/api/upload`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          },
+          body: JSON.stringify({ file: base64, folder: 'avatars' })
+        });
+
+        if (uploadRes.ok) {
+          const uploadData = await uploadRes.json();
+          finalAvatar = uploadData.name; // Use filename, not full URL, because other components prepend ${API_URL}/uploads/avatars/
+        } else {
+          const errorData = await uploadRes.json();
+          alert(`Erro ao fazer upload da foto: ${errorData.error || 'Serviço indisponível'}`);
+          setSaving(false);
+          return; // Abort profile update on upload failure
+        }
+      }
+
+      const updateBody = {
+        avatar: finalAvatar,
+        bio: bioInput,
+        state: stateInput,
+        city: cityInput,
+        unit: unitInput,
+        area: areaInput,
+        course: courseInput,
+        links: linksInput
+      };
+
       const res = await fetch(`${API_URL}/api/users/${userId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         },
-        body: JSON.stringify({ avatar: avatarInput, bio: bioInput })
+        body: JSON.stringify(updateBody)
       });
       if (res.ok) {
-        // Update local user state
-        setProfileUser(prev => ({ ...prev, avatar: avatarInput, bio: bioInput }));
-        // Update Auth Context state
-        setLoggedInUser(prev => ({ ...prev, avatar: avatarInput, bio: bioInput }));
+        const updatedFields = { ...updateBody, avatar: finalAvatar };
+        setProfileUser(prev => ({ ...prev, ...updatedFields }));
+        setLoggedInUser(prev => ({ ...prev, ...updatedFields }));
+        setAvatarInput(finalAvatar);
+        setAvatarFile(null);
+        setAvatarPreview(null);
         setIsEditModalOpen(false);
       } else {
         alert('Erro ao atualizar perfil.');
@@ -128,15 +200,33 @@ const Profile = () => {
     );
   }
 
-  const userAvatar = profileUser.avatar ? `/uploads/avatars/${profileUser.avatar}` : `https://ui-avatars.com/api/?name=${encodeURIComponent(profileUser.name)}&background=0D8ABC&color=fff`;
-
   return (
     <div className="profile-container">
       <div className="profile-header card">
-        <div className="profile-cover"></div>
+        <div className="profile-cover" style={profileUser.cover_image ? { backgroundImage: `url(${profileUser.cover_image})`, backgroundSize: 'cover', backgroundPosition: 'center' } : {}}></div>
         <div className="profile-info-section">
-          <div className="profile-avatar-wrapper">
-            <img src={userAvatar} alt={profileUser.name} className="profile-main-avatar" />
+          <div className="profile-top-row">
+            <div className="profile-avatar-wrapper">
+              <Avatar user={profileUser} className="profile-main-avatar" />
+            </div>
+            <div className="profile-actions">
+              {!isOwnProfile && <button className="btn-primary" onClick={() => alert('Seguindo!')}>Seguir</button>}
+              {!isOwnProfile && (
+                <button className="btn-secondary" onClick={() => navigate('/messages')}>
+                  <MessageCircle size={18} />
+                  <span>Mensagem</span>
+                </button>
+              )}
+              {isOwnProfile && (
+                <button className="btn-secondary" onClick={() => setIsEditModalOpen(true)}>
+                  <Settings size={18} />
+                  <span>Editar Perfil</span>
+                </button>
+              )}
+              <button className="icon-btn-border" onClick={() => alert('Mais opções')}>
+                <MoreHorizontal size={18} />
+              </button>
+            </div>
           </div>
           
           <div className="profile-details">
@@ -149,28 +239,17 @@ const Profile = () => {
             
             <div className="profile-meta">
               <span><BookOpen size={16} style={{ verticalAlign: 'middle', marginRight: '4px' }} /> {profileUser.role || 'Aluno'}</span>
-              <span>• <MapPin size={16} style={{ verticalAlign: 'middle', marginRight: '4px' }} /> SENAI São Paulo</span>
+              {(profileUser.city || profileUser.state || profileUser.unit) && (
+                <span>• <MapPin size={16} style={{ verticalAlign: 'middle', marginRight: '4px' }} /> {[profileUser.unit, profileUser.city, profileUser.state].filter(Boolean).join(', ')}</span>
+              )}
+              {(!profileUser.city && !profileUser.state && !profileUser.unit) && (
+                <span>• <MapPin size={16} style={{ verticalAlign: 'middle', marginRight: '4px' }} /> SENAI</span>
+              )}
               <span>• <Mail size={16} style={{ verticalAlign: 'middle', marginRight: '4px' }} /> {profileUser.email}</span>
+              {profileUser.course && (
+                <span>• <GraduationCap size={16} style={{ verticalAlign: 'middle', marginRight: '4px' }} /> {profileUser.course}</span>
+              )}
             </div>
-          </div>
-
-          <div className="profile-actions">
-            {!isOwnProfile && <button className="btn-primary" onClick={() => alert('Seguindo!')}>Seguir</button>}
-            {!isOwnProfile && (
-              <button className="btn-secondary" onClick={() => navigate('/messages')}>
-                <MessageCircle size={18} />
-                <span>Mensagem</span>
-              </button>
-            )}
-            {isOwnProfile && (
-              <button className="btn-secondary" onClick={() => setIsEditModalOpen(true)}>
-                <Settings size={18} />
-                <span>Editar Perfil</span>
-              </button>
-            )}
-            <button className="icon-btn-border" onClick={() => alert('Mais opções')}>
-              <MoreHorizontal size={18} />
-            </button>
           </div>
         </div>
         
@@ -222,10 +301,15 @@ const Profile = () => {
               <h3>Sobre {profileUser.name}</h3>
               <p style={{ margin: '12px 0', fontSize: '15px' }}>{profileUser.bio || 'Usuário sem biografia.'}</p>
               <hr style={{ border: 'none', borderTop: '1px solid var(--border-color)', margin: '16px 0' }} />
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '14px', color: 'var(--text-secondary)' }}>
-                <div><strong>E-mail:</strong> {profileUser.email}</div>
-                <div><strong>Tipo de Conta:</strong> {profileUser.role}</div>
-                <div><strong>Membro desde:</strong> {new Date(profileUser.created_at || Date.now()).toLocaleDateString('pt-BR')}</div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', fontSize: '14px', color: 'var(--text-secondary)' }}>
+                <div><Mail size={14} style={{ verticalAlign: 'middle', marginRight: '6px' }} /><strong>E-mail:</strong> {profileUser.email}</div>
+                <div><BookOpen size={14} style={{ verticalAlign: 'middle', marginRight: '6px' }} /><strong>Tipo de Conta:</strong> {profileUser.role}</div>
+                {profileUser.course && <div><GraduationCap size={14} style={{ verticalAlign: 'middle', marginRight: '6px' }} /><strong>Curso:</strong> {profileUser.course}</div>}
+                {profileUser.area && <div><Sparkles size={14} style={{ verticalAlign: 'middle', marginRight: '6px' }} /><strong>Área:</strong> {profileUser.area}</div>}
+                {profileUser.unit && <div><Building size={14} style={{ verticalAlign: 'middle', marginRight: '6px' }} /><strong>Unidade:</strong> {profileUser.unit}</div>}
+                {(profileUser.city || profileUser.state) && <div><MapPin size={14} style={{ verticalAlign: 'middle', marginRight: '6px' }} /><strong>Localização:</strong> {[profileUser.city, profileUser.state].filter(Boolean).join(', ')}</div>}
+                {profileUser.links && <div><Link2 size={14} style={{ verticalAlign: 'middle', marginRight: '6px' }} /><strong>Links:</strong> {profileUser.links}</div>}
+                <div><Calendar size={14} style={{ verticalAlign: 'middle', marginRight: '6px' }} /><strong>Membro desde:</strong> {new Date(profileUser.created_at || Date.now()).toLocaleDateString('pt-BR')}</div>
               </div>
             </div>
           )}
@@ -276,15 +360,14 @@ const Profile = () => {
             </div>
             <form onSubmit={handleUpdateProfile} className="edit-profile-form">
               <div className="form-group">
-                <label htmlFor="avatar">Avatar (Nome do arquivo ou URL de avatar)</label>
-                <input 
-                  type="text" 
-                  id="avatar" 
-                  value={avatarInput} 
-                  onChange={(e) => setAvatarInput(e.target.value)} 
-                  placeholder="Ex: joao.jpg ou deixe em branco para default"
-                  className="modal-input"
-                />
+                <label>Avatar</label>
+                <div className="avatar-upload-row">
+                  <Avatar user={{ avatar: avatarPreview || avatarInput, name: profileUser.name }} className="avatar-preview-small" />
+                  <input type="file" ref={avatarFileRef} style={{ display: 'none' }} accept="image/*" onChange={handleAvatarFileSelect} />
+                  <button type="button" className="btn-secondary" onClick={() => avatarFileRef.current?.click()} style={{ fontSize: '13px', padding: '6px 12px' }}>
+                    <Camera size={14} /> Trocar foto
+                  </button>
+                </div>
               </div>
               <div className="form-group">
                 <label htmlFor="bio">Biografia</label>
@@ -296,6 +379,34 @@ const Profile = () => {
                   className="modal-textarea"
                   maxLength={200}
                 />
+              </div>
+              <div className="form-row">
+                <div className="form-group">
+                  <label htmlFor="course">Curso</label>
+                  <input type="text" id="course" value={courseInput} onChange={(e) => setCourseInput(e.target.value)} placeholder="Ex: Desenvolvimento de Sistemas" className="modal-input" />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="area">Área</label>
+                  <input type="text" id="area" value={areaInput} onChange={(e) => setAreaInput(e.target.value)} placeholder="Ex: Tecnologia da Informação" className="modal-input" />
+                </div>
+              </div>
+              <div className="form-row">
+                <div className="form-group">
+                  <label htmlFor="unit">Unidade SENAI</label>
+                  <input type="text" id="unit" value={unitInput} onChange={(e) => setUnitInput(e.target.value)} placeholder="Ex: SENAI Informática" className="modal-input" />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="state">Estado</label>
+                  <input type="text" id="state" value={stateInput} onChange={(e) => setStateInput(e.target.value)} placeholder="Ex: SP" className="modal-input" />
+                </div>
+              </div>
+              <div className="form-group">
+                <label htmlFor="city">Cidade</label>
+                <input type="text" id="city" value={cityInput} onChange={(e) => setCityInput(e.target.value)} placeholder="Ex: São Paulo" className="modal-input" />
+              </div>
+              <div className="form-group">
+                <label htmlFor="links">Links (LinkedIn, GitHub, etc.)</label>
+                <input type="text" id="links" value={linksInput} onChange={(e) => setLinksInput(e.target.value)} placeholder="Ex: linkedin.com/in/seuusuario" className="modal-input" />
               </div>
               <div className="modal-footer">
                 <button type="button" className="btn-secondary" onClick={() => setIsEditModalOpen(false)} disabled={saving}>Cancelar</button>

@@ -16,6 +16,7 @@
   height: 48px;
   border-radius: 50%;
   border: 2px solid white;
+  object-fit: cover;
 }
 
 .sidebar-profile-info h4 {

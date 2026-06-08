@@ -44,10 +44,15 @@ const messageController = {
             const [messages] = await db.query(query, [loggedUserId, userId, userId, loggedUserId]);
 
             // Marca mensagens enviadas pelo outro usuário como lidas
-            await db.query(
+            const [updateResult] = await db.query(
                 "UPDATE messages SET status = 'lida' WHERE sender_id = ? AND receiver_id = ? AND status = 'enviada'",
                 [userId, loggedUserId]
             );
+
+            if (updateResult.affectedRows > 0) {
+                const socketHelper = require('../socketHelper');
+                socketHelper.sendToUser(userId, 'messages_read', { byUserId: loggedUserId });
+            }
 
             res.status(200).json(messages);
         } catch (error) {
@@ -58,21 +63,25 @@ const messageController = {
     send: async (req, res) => {
         try {
             const senderId = req.user.id;
-            const { receiverId, content } = req.body;
+            const { receiverId, content, message_type, media_url, attachment_name } = req.body;
 
-            if (!receiverId || !content) {
-                return res.status(400).json({ error: 'Destinatário e conteúdo são obrigatórios.' });
+            if (!receiverId || (!content && !media_url)) {
+                return res.status(400).json({ error: 'Destinatário e conteúdo (ou mídia) são obrigatórios.' });
             }
 
             const [result] = await db.query(
-                "INSERT INTO messages (sender_id, receiver_id, content, status) VALUES (?, ?, ?, 'enviada')",
-                [senderId, receiverId, content]
+                "INSERT INTO messages (sender_id, receiver_id, content, status, message_type, media_url, attachment_name) VALUES (?, ?, ?, 'enviada', ?, ?, ?)",
+                [senderId, receiverId, content || '', message_type || 'text', media_url || null, attachment_name || null]
             );
 
             const [newMessage] = await db.query('SELECT * FROM messages WHERE id = ?', [result.insertId]);
 
+            const socketHelper = require('../socketHelper');
+            socketHelper.sendToUser(receiverId, 'new_message', newMessage[0]);
+
             res.status(201).json(newMessage[0]);
         } catch (error) {
+            console.error(error);
             res.status(500).json({ error: 'Erro ao enviar mensagem' });
         }
     }

@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 import { NavLink, Link, useNavigate } from 'react-router-dom';
 import { Home, Rss, Clock, Users, MessageSquare, Calendar, BookOpen, Bell, FileText, Bookmark, Settings, LogOut } from 'lucide-react';
 import { AuthContext } from '../context/AuthContext';
+import Avatar from './Avatar';
 import './Sidebar.css';
 
 const Sidebar = () => {
@@ -29,13 +30,12 @@ const Sidebar = () => {
   ];
 
   const loggedUserId = user?.id || 1;
-  const userAvatar = user?.avatar ? `/uploads/avatars/${user.avatar}` : `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.name || 'User')}&background=0D8ABC&color=fff`;
 
   return (
     <aside className="sidebar-container">
       <div className="sidebar-profile">
         <Link to={`/profile/${loggedUserId}`}>
-          <img src={userAvatar} alt="Profile" className="sidebar-avatar" />
+          <Avatar user={user} className="sidebar-avatar" />
         </Link>
         <div className="sidebar-profile-info">
           <Link to={`/profile/${loggedUserId}`} style={{ color: 'white', textDecoration: 'none' }}>

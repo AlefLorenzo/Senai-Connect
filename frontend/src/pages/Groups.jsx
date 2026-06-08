@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { Users, Search, ChevronLeft, Calendar, LogOut, ArrowRight, UserCheck, MessageSquare, BookOpen } from 'lucide-react';
 import { AuthContext } from '../context/AuthContext';
 import Post from '../components/Post';
+import Avatar from '../components/Avatar';
 import './Groups.css';
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
@@ -251,7 +252,7 @@ const Groups = () => {
             {selectedGroup.is_member ? (
               <div className="create-post-card card" style={{ padding: '16px' }}>
                 <div className="create-post-top" style={{ display: 'flex', gap: '12px', marginBottom: '12px' }}>
-                  <img src={user?.avatar ? `/uploads/avatars/${user.avatar}` : `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.name || '')}`} alt="Você" className="create-post-avatar" style={{ width: '40px', height: '40px', borderRadius: '50%' }} />
+                  <Avatar user={user} className="create-post-avatar" style={{ width: '40px', height: '40px' }} />
                   <input 
                     type="text" 
                     placeholder={`Compartilhe algo no grupo ${selectedGroup.name}...`} 
@@ -296,20 +297,17 @@ const Groups = () => {
         ) : (
           <div className="group-members-list" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
             {groupMembers.length > 0 ? (
-              groupMembers.map(member => {
-                const memberAvatar = member.avatar ? `/uploads/avatars/${member.avatar}` : `https://ui-avatars.com/api/?name=${encodeURIComponent(member.name)}&background=0D8ABC&color=fff`;
-                return (
+              groupMembers.map(member => (
                   <div key={member.id} className="card" style={{ padding: '12px 16px', display: 'flex', alignItems: 'center', justifyBetween: 'space-between', gap: '12px' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                      <img src={memberAvatar} alt={member.name} style={{ width: '40px', height: '40px', borderRadius: '50%', objectFit: 'cover' }} />
+                      <Avatar user={member} style={{ width: '40px', height: '40px' }} />
                       <div>
                         <h4 style={{ margin: 0, color: 'var(--text-primary)' }}>{member.name}</h4>
                         <span style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>{member.role || 'Aluno'}</span>
                       </div>
                     </div>
                   </div>
-                );
-              })
+              ))
             ) : (
               <div className="card" style={{ padding: '20px', textAlign: 'center' }}>
                 Nenhum membro listado.

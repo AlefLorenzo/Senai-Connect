@@ -83,6 +83,20 @@ const postController = {
                 res.status(200).json({ message: 'Curtida removida', liked: false });
             } else {
                 await db.query('INSERT INTO post_likes (post_id, user_id) VALUES (?, ?)', [id, userId]);
+
+                // Notifica o dono do post (se não for ele mesmo)
+                try {
+                    const [post] = await db.query('SELECT user_id FROM posts WHERE id = ?', [id]);
+                    if (post.length > 0 && post[0].user_id !== userId) {
+                        const notificationController = require('./notificationController');
+                        await notificationController.createNotification(
+                            post[0].user_id, 'like', userId, parseInt(id), 'curtiu seu post.'
+                        );
+                    }
+                } catch (notifError) {
+                    console.error('Erro ao enviar notificação de like (não-bloqueante):', notifError);
+                }
+
                 res.status(200).json({ message: 'Post curtido', liked: true });
             }
         } catch (error) {

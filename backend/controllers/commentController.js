@@ -39,6 +39,19 @@ const commentController = {
                 WHERE c.id = ?
             `, [result.insertId]);
 
+            // Notifica o dono do post (se não for ele mesmo)
+            try {
+                const [post] = await db.query('SELECT user_id FROM posts WHERE id = ?', [id]);
+                if (post.length > 0 && post[0].user_id !== userId) {
+                    const notificationController = require('./notificationController');
+                    await notificationController.createNotification(
+                        post[0].user_id, 'comment', userId, parseInt(id), 'comentou no seu post.'
+                    );
+                }
+            } catch (notifError) {
+                console.error('Erro ao enviar notificação de comentário (não-bloqueante):', notifError);
+            }
+
             res.status(201).json({ message: 'Comentário adicionado!', comment: newComment[0] });
         } catch (error) {
             res.status(500).json({ error: 'Erro ao criar comentário' });

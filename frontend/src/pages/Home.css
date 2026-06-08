@@ -32,6 +32,7 @@
   width: 40px;
   height: 40px;
   border-radius: 50%;
+  object-fit: cover;
 }
 
 .create-post-input {
@@ -89,3 +90,118 @@
     display: none;
   }
 }
+
+/* Post Image Preview */
+.post-image-preview {
+  position: relative;
+  margin: 8px 0;
+  border-radius: 8px;
+  overflow: hidden;
+  max-height: 200px;
+}
+
+.post-image-preview img {
+  width: 100%;
+  max-height: 200px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.remove-image-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: rgba(0,0,0,0.6);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.remove-image-btn:hover {
+  background: rgba(0,0,0,0.85);
+}
+
+/* Add Story Card */
+.add-story-card {
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.add-story-card:hover {
+  transform: translateY(-2px);
+}
+
+/* Story Modal */
+.story-modal {
+  max-width: 480px;
+  width: 90vw;
+}
+
+.story-create-body {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.story-upload-area {
+  border: 2px dashed var(--border-color, #e4e6e9);
+  border-radius: 12px;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  cursor: pointer;
+  color: var(--text-secondary, #65676B);
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.story-upload-area:hover {
+  border-color: var(--primary-color, #0077B5);
+  background: rgba(0, 119, 181, 0.04);
+}
+
+.story-upload-area p {
+  margin: 0;
+  font-size: 14px;
+}
+
+.story-preview-container {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.story-preview-img {
+  width: 100%;
+  max-height: 300px;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+.story-text-input {
+  width: 100%;
+  min-height: 60px;
+  border: 1px solid var(--border-color, #e4e6e9);
+  border-radius: 8px;
+  padding: 12px;
+  font-size: 14px;
+  resize: vertical;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.story-text-input:focus {
+  border-color: var(--primary-color, #0077B5);
+}
+

@@ -5,7 +5,7 @@ const userController = {
         try {
             const { id } = req.params;
             const [users] = await db.query(
-                'SELECT id, name, email, role, avatar, bio, created_at FROM users WHERE id = ?',
+                'SELECT id, name, email, role, avatar, bio, cover_image, state, city, unit, area, course, links, created_at FROM users WHERE id = ?',
                 [id]
             );
             if (users.length === 0) return res.status(404).json({ error: 'Usuário não encontrado.' });
@@ -18,20 +18,41 @@ const userController = {
     updateProfile: async (req, res) => {
         try {
             const { id } = req.params;
-            const { avatar, bio } = req.body;
+            const { avatar, bio, cover_image, state, city, unit, area, course, links } = req.body;
             const loggedUserId = req.user.id;
 
             if (parseInt(id) !== loggedUserId) {
                 return res.status(403).json({ error: 'Você não tem permissão para editar este perfil.' });
             }
 
-            await db.query(
-                'UPDATE users SET avatar = ?, bio = ? WHERE id = ?',
-                [avatar, bio, id]
-            );
+            // Build dynamic update to avoid overwriting fields not sent
+            const fields = [];
+            const values = [];
+
+            if (avatar !== undefined) { fields.push('avatar = ?'); values.push(avatar); }
+            if (bio !== undefined) { fields.push('bio = ?'); values.push(bio); }
+            if (cover_image !== undefined) { fields.push('cover_image = ?'); values.push(cover_image); }
+            if (state !== undefined) { fields.push('state = ?'); values.push(state); }
+            if (city !== undefined) { fields.push('city = ?'); values.push(city); }
+            if (unit !== undefined) { fields.push('unit = ?'); values.push(unit); }
+            if (area !== undefined) { fields.push('area = ?'); values.push(area); }
+            if (course !== undefined) { fields.push('course = ?'); values.push(course); }
+            if (links !== undefined) { fields.push('links = ?'); values.push(typeof links === 'object' ? JSON.stringify(links) : links); }
+
+            if (fields.length === 0) {
+                return res.status(400).json({ error: 'Nenhum campo para atualizar.' });
+            }
+
+            values.push(id);
+            await db.query(`UPDATE users SET ${fields.join(', ')} WHERE id = ?`, values);
+
+            // Emit socket event to notify other connected clients about profile change
+            const socketHelper = require('../socketHelper');
+            socketHelper.broadcast('profile_updated', { userId: parseInt(id), fields: req.body });
 
             res.status(200).json({ message: 'Perfil atualizado com sucesso!' });
         } catch (error) {
+            console.error('Erro ao atualizar perfil:', error);
             res.status(500).json({ error: 'Erro ao atualizar perfil' });
         }
     },

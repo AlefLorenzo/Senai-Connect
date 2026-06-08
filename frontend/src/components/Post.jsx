@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { MoreHorizontal, ThumbsUp, MessageSquare, Share2, Bookmark, FileText, Trash2, Edit2, Send, X } from 'lucide-react';
 import { AuthContext } from '../context/AuthContext';
+import Avatar from './Avatar';
 import './Post.css';
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
@@ -175,12 +176,20 @@ const Post = ({ post, onDeleted }) => {
 
   const userAvatar = post.user_avatar ? `/uploads/avatars/${post.user_avatar}` : `https://ui-avatars.com/api/?name=${encodeURIComponent(post.user_name || 'User')}&background=0D8ABC&color=fff`;
 
+  const isImageUrl = (url) => {
+    if (!url) return false;
+    if (post.attachment_type === 'image') return true;
+    const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp'];
+    const lowerUrl = url.toLowerCase();
+    return imageExtensions.some(ext => lowerUrl.endsWith(ext));
+  };
+
   return (
     <div className="post-card card">
       <div className="post-header">
         <div className="post-user-info">
           <Link to={`/profile/${post.user_id}`}>
-            <img src={userAvatar} alt={post.user_name} className="post-avatar" />
+            <Avatar user={{ avatar: post.user_avatar, name: post.user_name }} className="post-avatar" />
           </Link>
           <div>
             <div className="post-user-name">
@@ -237,17 +246,21 @@ const Post = ({ post, onDeleted }) => {
         )}
         
         {post.attachment_url && (
-          <div className="post-attachment-doc">
-            <div className="doc-icon">
-              <FileText size={24} color="#E53935" />
+          isImageUrl(post.attachment_url) ? (
+            <img src={post.attachment_url} alt="Anexo do post" style={{ width: '100%', maxHeight: '500px', objectFit: 'contain', borderRadius: 'var(--radius-md)', backgroundColor: '#000', marginTop: '12px' }} />
+          ) : (
+            <div className="post-attachment-doc">
+              <div className="doc-icon">
+                <FileText size={24} color="#E53935" />
+              </div>
+              <div className="doc-info">
+                <span className="doc-name">{post.attachment_name || 'Arquivo Anexo'}</span>
+                <a href={post.attachment_url} target="_blank" rel="noopener noreferrer" className="download-link">
+                  Visualizar / Baixar
+                </a>
+              </div>
             </div>
-            <div className="doc-info">
-              <span className="doc-name">{post.attachment_name || 'Arquivo Anexo'}</span>
-              <a href={post.attachment_url} target="_blank" rel="noopener noreferrer" className="download-link">
-                Visualizar / Baixar
-              </a>
-            </div>
-          </div>
+          )
         )}
       </div>
 
@@ -290,11 +303,7 @@ const Post = ({ post, onDeleted }) => {
           </div>
           
           <form className="comment-input-form" onSubmit={handleAddComment}>
-            <img 
-              src={user?.avatar ? `/uploads/avatars/${user.avatar}` : `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.name || 'User')}`} 
-              alt="Você" 
-              className="comment-avatar" 
-            />
+            <Avatar user={user} className="comment-avatar" />
             <input 
               type="text" 
               placeholder="Escreva um comentário..." 
@@ -316,7 +325,7 @@ const Post = ({ post, onDeleted }) => {
                   const commAvatar = comment.user_avatar ? `/uploads/avatars/${comment.user_avatar}` : `https://ui-avatars.com/api/?name=${encodeURIComponent(comment.user_name || 'User')}`;
                   return (
                     <div key={comment.id} className="comment-item">
-                      <img src={commAvatar} alt={comment.user_name} className="comment-avatar" />
+                      <Avatar user={{ avatar: comment.user_avatar, name: comment.user_name }} className="comment-avatar" />
                       <div className="comment-bubble-wrapper">
                         <div className="comment-bubble">
                           <div className="comment-bubble-header">

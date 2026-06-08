@@ -1,0 +1,159 @@
+.story-viewer-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: #000;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.story-viewer-container {
+  width: 100%;
+  max-width: 500px;
+  height: 100%;
+  position: relative;
+  background-color: #111;
+  display: flex;
+  flex-direction: column;
+}
+
+.story-progress-container {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  right: 10px;
+  display: flex;
+  gap: 4px;
+  z-index: 10;
+}
+
+.story-progress-bar-bg {
+  flex: 1;
+  height: 3px;
+  background-color: rgba(255, 255, 255, 0.3);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.story-progress-bar-fill {
+  height: 100%;
+  background-color: white;
+  width: 0%;
+}
+
+.story-header {
+  position: absolute;
+  top: 25px;
+  left: 15px;
+  right: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 10;
+}
+
+.story-user-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.story-viewer-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid white;
+}
+
+.story-viewer-name {
+  color: white;
+  font-weight: 600;
+  font-size: 15px;
+  text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
+  display: block;
+}
+
+.story-viewer-time {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 12px;
+  text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
+}
+
+.story-close-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+}
+
+.story-content-area {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  touch-action: none; /* Prevent default touch actions while holding */
+}
+
+.story-media {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.story-text-only {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #0D8ABC, #0056D2);
+  padding: 30px;
+  text-align: center;
+}
+
+.story-text-only p {
+  color: white;
+  font-size: 24px;
+  font-weight: 500;
+}
+
+.story-caption-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 20px;
+  background: linear-gradient(transparent, rgba(0,0,0,0.8));
+  color: white;
+  text-align: center;
+  font-size: 16px;
+}
+
+.story-nav-left, .story-nav-right {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 30%;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.story-nav-left {
+  left: 0;
+  justify-content: flex-start;
+  padding-left: 10px;
+}
+
+.story-nav-right {
+  right: 0;
+  justify-content: flex-end;
+  padding-right: 10px;
+}

@@ -13,6 +13,16 @@ const authController = {
                 return res.status(400).json({ error: 'Todos os campos são obrigatórios.' });
             }
 
+            // Validação de domínio de email institucional
+            let determinedRole = 'Aluno';
+            if (email.endsWith('@estudante.senai.com')) {
+                determinedRole = 'Aluno';
+            } else if (email.endsWith('@docente.senai.com')) {
+                determinedRole = 'Professor';
+            } else {
+                return res.status(400).json({ error: 'E-mail inválido. Utilize um e-mail institucional (@estudante.senai.com ou @docente.senai.com).' });
+            }
+
             // Verifica se usuário existe
             const [existing] = await db.query('SELECT * FROM users WHERE email = ?', [email]);
             if (existing.length > 0) return res.status(400).json({ error: 'E-mail já cadastrado no sistema.' });
@@ -24,7 +34,7 @@ const authController = {
             // Inserir no banco
             const [result] = await db.query(
                 'INSERT INTO users (name, email, password_hash, role) VALUES (?, ?, ?, ?)',
-                [name, email, passwordHash, role || 'Aluno']
+                [name, email, passwordHash, determinedRole]
             );
 
             res.status(201).json({ message: 'Cadastro realizado com sucesso!', userId: result.insertId });
@@ -68,7 +78,7 @@ const authController = {
 
     me: async (req, res) => {
         try {
-            const [users] = await db.query('SELECT id, name, email, role, avatar, bio FROM users WHERE id = ?', [req.user.id]);
+            const [users] = await db.query('SELECT id, name, email, role, avatar, bio, cover_image, state, city, unit, area, course, links FROM users WHERE id = ?', [req.user.id]);
             if (users.length === 0) return res.status(404).json({ error: 'Usuário não encontrado.' });
             res.status(200).json(users[0]);
         } catch (error) {

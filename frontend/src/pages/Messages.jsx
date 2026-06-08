@@ -1,22 +1,25 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
-import { Search, Send, Phone, Video, MoreVertical, MessageSquare } from 'lucide-react';
+import { Search, Send, Phone, Video, MoreVertical, MessageSquare, ArrowLeft, Check, CheckCheck, Paperclip } from 'lucide-react';
 import { AuthContext } from '../context/AuthContext';
+import { SocketContext } from '../context/SocketContext';
+import Avatar from '../components/Avatar';
 import './Messages.css';
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
 const Messages = () => {
   const { user } = useContext(AuthContext);
+  const { socket } = useContext(SocketContext);
   
   const [contacts, setContacts] = useState([]);
   const [selectedContact, setSelectedContact] = useState(null);
   const [history, setHistory] = useState([]);
   const [messageText, setMessageText] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
+  const [showMobileChat, setShowMobileChat] = useState(false);
   
   const chatBodyRef = useRef(null);
 
-  // Fetch contacts
   const fetchContacts = async () => {
     try {
       const res = await fetch(`${API_URL}/api/messages/contacts`, {
@@ -33,12 +36,8 @@ const Messages = () => {
 
   useEffect(() => {
     fetchContacts();
-    // Poll contacts list every 4 seconds to catch new messages and unread counts
-    const interval = setInterval(fetchContacts, 4000);
-    return () => clearInterval(interval);
   }, []);
 
-  // Fetch chat history for selected contact
   const fetchHistory = async (contactId) => {
     if (!contactId) return;
     try {
@@ -48,6 +47,8 @@ const Messages = () => {
       if (res.ok) {
         const data = await res.json();
         setHistory(data);
+        // Marking as read might have updated our contacts list unread count, let's refresh contacts
+        fetchContacts();
       }
     } catch (err) {
       console.error('Erro ao buscar histórico:', err);
@@ -57,19 +58,45 @@ const Messages = () => {
   useEffect(() => {
     if (selectedContact) {
       fetchHistory(selectedContact.id);
-      
-      // Setup polling for active conversation every 2.5 seconds
-      const chatInterval = setInterval(() => {
-        fetchHistory(selectedContact.id);
-      }, 2500);
-
-      return () => clearInterval(chatInterval);
+      setShowMobileChat(true);
     } else {
       setHistory([]);
+      setShowMobileChat(false);
     }
   }, [selectedContact]);
 
-  // Scroll to bottom when history changes
+  useEffect(() => {
+    if (socket) {
+      const handleNewMessage = (msg) => {
+        // If it belongs to the current chat
+        if (selectedContact && (msg.sender_id === selectedContact.id || msg.receiver_id === selectedContact.id)) {
+          setHistory(prev => [...prev, msg]);
+          // Re-fetch to mark as read immediately if chat is open
+          if (msg.sender_id === selectedContact.id) {
+             fetchHistory(selectedContact.id);
+          }
+        } else {
+          // If not in current chat, just refresh contacts to show badge
+          fetchContacts();
+        }
+      };
+
+      const handleMessagesRead = (data) => {
+        if (selectedContact && data.byUserId === selectedContact.id) {
+           setHistory(prev => prev.map(m => m.status === 'enviada' ? { ...m, status: 'lida' } : m));
+        }
+      };
+
+      socket.on('new_message', handleNewMessage);
+      socket.on('messages_read', handleMessagesRead);
+
+      return () => {
+        socket.off('new_message', handleNewMessage);
+        socket.off('messages_read', handleMessagesRead);
+      };
+    }
+  }, [socket, selectedContact]);
+
   useEffect(() => {
     if (chatBodyRef.current) {
       chatBodyRef.current.scrollTop = chatBodyRef.current.scrollHeight;
@@ -90,7 +117,7 @@ const Messages = () => {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         },
-        body: JSON.stringify({ receiverId: selectedContact.id, content: tempText })
+        body: JSON.stringify({ receiverId: selectedContact.id, content: tempText, message_type: 'text' })
       });
       
       if (res.ok) {
@@ -105,13 +132,12 @@ const Messages = () => {
     }
   };
 
-  // Filter contacts by search query
   const filteredContacts = contacts.filter(contact => 
     contact.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
-    <div className="messages-layout card">
+    <div className={`messages-layout card ${showMobileChat ? 'show-chat-mobile' : ''}`}>
       <div className="messages-sidebar">
         <div className="messages-header">
           <h2>Mensagens</h2>
@@ -129,7 +155,6 @@ const Messages = () => {
           {filteredContacts.length > 0 ? (
             filteredContacts.map(contact => {
               const isActive = selectedContact?.id === contact.id;
-              const contactAvatar = contact.avatar ? `/uploads/avatars/${contact.avatar}` : `https://ui-avatars.com/api/?name=${encodeURIComponent(contact.name)}&background=0D8ABC&color=fff`;
               const hasUnread = contact.unread_count > 0;
               
               return (
@@ -138,7 +163,7 @@ const Messages = () => {
                   className={`contact-item ${isActive ? 'active' : ''}`}
                   onClick={() => setSelectedContact(contact)}
                 >
-                  <img src={contactAvatar} alt={contact.name} className="contact-avatar" />
+                  <Avatar user={contact} className="contact-avatar" />
                   <div className="contact-info">
                     <h4 style={{ fontWeight: hasUnread ? '700' : '500' }}>{contact.name}</h4>
                     <p style={{ fontWeight: hasUnread ? '600' : 'normal', color: hasUnread ? 'var(--text-primary)' : 'var(--text-secondary)' }}>
@@ -146,7 +171,7 @@ const Messages = () => {
                     </p>
                   </div>
                   {hasUnread && (
-                    <span style={{ background: 'var(--senai-blue-primary)', color: 'white', fontSize: '10px', fontWeight: 'bold', padding: '2px 6px', borderRadius: '10px', marginRight: '6px' }}>
+                    <span className="unread-badge">
                       {contact.unread_count}
                     </span>
                   )}
@@ -166,10 +191,10 @@ const Messages = () => {
           <>
             <div className="chat-header">
               <div className="chat-user">
-                <img 
-                  src={selectedContact.avatar ? `/uploads/avatars/${selectedContact.avatar}` : `https://ui-avatars.com/api/?name=${encodeURIComponent(selectedContact.name)}&background=0D8ABC&color=fff`} 
-                  alt={selectedContact.name} 
-                />
+                <button className="mobile-back-btn" onClick={() => setShowMobileChat(false)}>
+                   <ArrowLeft size={24} />
+                </button>
+                <Avatar user={selectedContact} style={{ width: '40px', height: '40px' }} />
                 <div>
                   <h3>{selectedContact.name}</h3>
                   <span style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>{selectedContact.role || 'Estudante'}</span>
@@ -186,15 +211,26 @@ const Messages = () => {
               {history.length > 0 ? (
                 history.map((msg) => {
                   const isSent = msg.sender_id === user?.id;
+                  const isRead = msg.status === 'lida';
                   return (
                     <div 
                       key={msg.id} 
                       className={`chat-bubble ${isSent ? 'sent' : 'received'}`}
                       style={{ margin: '4px 0' }}
                     >
-                      <div>{msg.content}</div>
-                      <div style={{ fontSize: '9px', textAlign: 'right', marginTop: '4px', opacity: 0.8 }}>
-                        {new Date(msg.created_at).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
+                      <div className="chat-bubble-content">
+                         {msg.message_type === 'image' && msg.media_url && (
+                            <img src={msg.media_url} alt="Media" className="chat-media-img" />
+                         )}
+                         {msg.content && <div>{msg.content}</div>}
+                      </div>
+                      <div className="chat-bubble-meta">
+                        <span>{new Date(msg.created_at).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}</span>
+                        {isSent && (
+                          <span className="read-receipt" style={{ color: isRead ? '#4FC3F7' : 'var(--text-secondary)' }}>
+                            {isRead ? <CheckCheck size={14} /> : <Check size={14} />}
+                          </span>
+                        )}
                       </div>
                     </div>
                   );
@@ -208,6 +244,9 @@ const Messages = () => {
             </div>
             
             <form className="chat-input-area" onSubmit={handleSendMessage}>
+              <button type="button" className="icon-btn-transparent" onClick={() => alert('Anexos (em breve)')}>
+                 <Paperclip size={20} color="#65676B" />
+              </button>
               <input 
                 type="text" 
                 placeholder="Digite uma mensagem..." 
@@ -220,10 +259,10 @@ const Messages = () => {
             </form>
           </>
         ) : (
-          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', color: 'var(--text-secondary)', gap: '12px' }}>
+          <div className="chat-empty-state">
             <MessageSquare size={48} />
             <h3>Selecione um contato para conversar</h3>
-            <p style={{ fontSize: '13px' }}>Seus chats recentes e lista de contatos aparecem no menu à esquerda.</p>
+            <p>Seus chats recentes e lista de contatos aparecem no menu à esquerda.</p>
           </div>
         )}
       </div>
