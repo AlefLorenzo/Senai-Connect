@@ -31,7 +31,7 @@ const Groups = () => {
   const fetchGroups = async () => {
     try {
       const res = await fetch(`${API_URL}/api/groups`, {
-        headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+        headers: { 'Authorization': `Bearer ${sessionStorage.getItem('token')}` }
       });
       if (res.ok) {
         const data = await res.json();
@@ -53,7 +53,7 @@ const Groups = () => {
     // Fetch group posts
     try {
       const postsRes = await fetch(`${API_URL}/api/groups/${group.id}/posts`, {
-        headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+        headers: { 'Authorization': `Bearer ${sessionStorage.getItem('token')}` }
       });
       if (postsRes.ok) {
         const postsData = await postsRes.json();
@@ -66,7 +66,7 @@ const Groups = () => {
     // Fetch group members
     try {
       const membersRes = await fetch(`${API_URL}/api/groups/${group.id}/members`, {
-        headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+        headers: { 'Authorization': `Bearer ${sessionStorage.getItem('token')}` }
       });
       if (membersRes.ok) {
         const membersData = await membersRes.json();
@@ -85,7 +85,7 @@ const Groups = () => {
     try {
       const res = await fetch(`${API_URL}/api/groups/${selectedGroup.id}/${endpoint}`, {
         method: 'POST',
-        headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+        headers: { 'Authorization': `Bearer ${sessionStorage.getItem('token')}` }
       });
       
       if (res.ok) {
@@ -101,7 +101,7 @@ const Groups = () => {
         
         // Refresh members list
         const membersRes = await fetch(`${API_URL}/api/groups/${selectedGroup.id}/members`, {
-          headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+          headers: { 'Authorization': `Bearer ${sessionStorage.getItem('token')}` }
         });
         if (membersRes.ok) {
           const membersData = await membersRes.json();
@@ -125,7 +125,7 @@ const Groups = () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+          'Authorization': `Bearer ${sessionStorage.getItem('token')}`
         },
         body: JSON.stringify({ name: newGroupName, description: newGroupDesc })
       });
@@ -162,7 +162,7 @@ const Groups = () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+          'Authorization': `Bearer ${sessionStorage.getItem('token')}`
         },
         body: JSON.stringify({ content: newGroupPost })
       });
@@ -170,7 +170,7 @@ const Groups = () => {
         setNewGroupPost('');
         // Reload group posts
         const postsRes = await fetch(`${API_URL}/api/groups/${selectedGroup.id}/posts`, {
-          headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+          headers: { 'Authorization': `Bearer ${sessionStorage.getItem('token')}` }
         });
         if (postsRes.ok) {
           const postsData = await postsRes.json();

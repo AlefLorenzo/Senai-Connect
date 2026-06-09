@@ -14,7 +14,7 @@ const Saved = () => {
     if (!user) return;
     setLoading(true);
     fetch(`${API_URL}/api/users/${user.id}/saved`, {
-      headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+      headers: { 'Authorization': `Bearer ${sessionStorage.getItem('token')}` }
     })
       .then(res => res.json())
       .then(data => {

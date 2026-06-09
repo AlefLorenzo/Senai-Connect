@@ -45,7 +45,7 @@ const Profile = () => {
     
     // Fetch User Details
     fetch(`${API_URL}/api/users/${userId}`, {
-      headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+      headers: { 'Authorization': `Bearer ${sessionStorage.getItem('token')}` }
     })
       .then(res => res.json())
       .then(data => {
@@ -65,7 +65,7 @@ const Profile = () => {
 
     // Fetch User Posts
     fetch(`${API_URL}/api/users/${userId}/posts`, {
-      headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+      headers: { 'Authorization': `Bearer ${sessionStorage.getItem('token')}` }
     })
       .then(res => res.json())
       .then(data => {
@@ -75,7 +75,7 @@ const Profile = () => {
 
     // Fetch User Groups
     fetch(`${API_URL}/api/users/${userId}/groups`, {
-      headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+      headers: { 'Authorization': `Bearer ${sessionStorage.getItem('token')}` }
     })
       .then(res => res.json())
       .then(data => {
@@ -86,7 +86,7 @@ const Profile = () => {
     // Fetch Saved Posts (only if own profile)
     if (isOwnProfile) {
       fetch(`${API_URL}/api/users/${userId}/saved`, {
-        headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+        headers: { 'Authorization': `Bearer ${sessionStorage.getItem('token')}` }
       })
         .then(res => res.json())
         .then(data => {
@@ -133,7 +133,7 @@ const Profile = () => {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
+            'Authorization': `Bearer ${sessionStorage.getItem('token')}`
           },
           body: JSON.stringify({ file: base64, folder: 'avatars' })
         });
@@ -164,7 +164,7 @@ const Profile = () => {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+          'Authorization': `Bearer ${sessionStorage.getItem('token')}`
         },
         body: JSON.stringify(updateBody)
       });

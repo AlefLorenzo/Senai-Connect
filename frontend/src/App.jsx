@@ -14,6 +14,9 @@ import Files from './pages/Files';
 import Settings from './pages/Settings';
 import Help from './pages/Help';
 import PlaceholderPage from './pages/PlaceholderPage';
+import EventosPage from './pages/EventosPage';
+import CursosPage from './pages/CursosPage';
+import AvisosPage from './pages/AvisosPage';
 import Auth from './pages/Auth/Auth';
 import './App.css';
 
@@ -51,9 +54,9 @@ function App() {
               <Route path="/stories" element={<PlaceholderPage title="Histórias" />} />
               <Route path="/groups" element={<Groups />} />
               <Route path="/messages" element={<Messages />} />
-              <Route path="/events" element={<PlaceholderPage title="Eventos" />} />
-              <Route path="/courses" element={<PlaceholderPage title="Cursos" />} />
-              <Route path="/notices" element={<PlaceholderPage title="Avisos" />} />
+              <Route path="/events" element={<EventosPage />} />
+              <Route path="/courses" element={<CursosPage />} />
+              <Route path="/notices" element={<AvisosPage />} />
               <Route path="/files" element={<Files />} />
               <Route path="/saved" element={<Saved />} />
               <Route path="/settings" element={<Settings />} />

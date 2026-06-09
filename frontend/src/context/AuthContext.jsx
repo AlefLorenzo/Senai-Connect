@@ -9,7 +9,7 @@ export const AuthProvider = ({ children }) => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const token = localStorage.getItem('token');
+        const token = sessionStorage.getItem('token');
         if (token) {
             fetch(`${API_URL}/api/auth/me`, {
                 headers: { 'Authorization': `Bearer ${token}` }
@@ -17,7 +17,7 @@ export const AuthProvider = ({ children }) => {
             .then(res => res.json())
             .then(data => {
                 if (data.error) {
-                    localStorage.removeItem('token');
+                    sessionStorage.removeItem('token');
                 } else {
                     setUser(data);
                 }
@@ -32,12 +32,12 @@ export const AuthProvider = ({ children }) => {
     }, []);
 
     const login = (token, userData) => {
-        localStorage.setItem('token', token);
+        sessionStorage.setItem('token', token);
         setUser(userData);
     };
 
     const logout = () => {
-        localStorage.removeItem('token');
+        sessionStorage.removeItem('token');
         setUser(null);
     };
 

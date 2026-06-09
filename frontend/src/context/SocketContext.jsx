@@ -38,7 +38,7 @@ export const SocketProvider = ({ children }) => {
 
         socket.on('profile_updated', (data) => {
             if (data.userId === user.id) {
-                const token = localStorage.getItem('token');
+                const token = sessionStorage.getItem('token');
                 if (token) {
                     fetch(`${API_URL}/api/auth/me`, {
                         headers: { 'Authorization': `Bearer ${token}` }
@@ -66,7 +66,7 @@ export const SocketProvider = ({ children }) => {
 
     const fetchNotifications = async () => {
         try {
-            const token = localStorage.getItem('token');
+            const token = sessionStorage.getItem('token');
             if (!token) return;
             const res = await fetch(`${API_URL}/api/notifications`, {
                 headers: { 'Authorization': `Bearer ${token}` }
@@ -83,7 +83,7 @@ export const SocketProvider = ({ children }) => {
 
     const markAsRead = async (notificationId) => {
         try {
-            const token = localStorage.getItem('token');
+            const token = sessionStorage.getItem('token');
             await fetch(`${API_URL}/api/notifications/${notificationId}/read`, {
                 method: 'PUT',
                 headers: { 'Authorization': `Bearer ${token}` }

@@ -30,7 +30,7 @@ const Post = ({ post, onDeleted }) => {
     const fetchStatus = async () => {
       try {
         const res = await fetch(`${API_URL}/api/posts/${post.id}/status`, {
-          headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+          headers: { 'Authorization': `Bearer ${sessionStorage.getItem('token')}` }
         });
         if (res.ok) {
           const data = await res.json();
@@ -55,7 +55,7 @@ const Post = ({ post, onDeleted }) => {
     setLoadingComments(true);
     try {
       const res = await fetch(`${API_URL}/api/posts/${post.id}/comments`, {
-        headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+        headers: { 'Authorization': `Bearer ${sessionStorage.getItem('token')}` }
       });
       if (res.ok) {
         const data = await res.json();
@@ -73,7 +73,7 @@ const Post = ({ post, onDeleted }) => {
     try {
       const res = await fetch(`${API_URL}/api/posts/${post.id}/like`, {
         method: 'POST',
-        headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+        headers: { 'Authorization': `Bearer ${sessionStorage.getItem('token')}` }
       });
       if (res.ok) {
         const data = await res.json();
@@ -89,7 +89,7 @@ const Post = ({ post, onDeleted }) => {
     try {
       const res = await fetch(`${API_URL}/api/posts/${post.id}/save`, {
         method: 'POST',
-        headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+        headers: { 'Authorization': `Bearer ${sessionStorage.getItem('token')}` }
       });
       if (res.ok) {
         const data = await res.json();
@@ -107,7 +107,7 @@ const Post = ({ post, onDeleted }) => {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+          'Authorization': `Bearer ${sessionStorage.getItem('token')}`
         },
         body: JSON.stringify({ content: editContent })
       });
@@ -125,7 +125,7 @@ const Post = ({ post, onDeleted }) => {
     try {
       const res = await fetch(`${API_URL}/api/posts/${post.id}`, {
         method: 'DELETE',
-        headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+        headers: { 'Authorization': `Bearer ${sessionStorage.getItem('token')}` }
       });
       if (res.ok) {
         if (onDeleted) onDeleted(post.id);
@@ -143,7 +143,7 @@ const Post = ({ post, onDeleted }) => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+          'Authorization': `Bearer ${sessionStorage.getItem('token')}`
         },
         body: JSON.stringify({ content: newCommentText })
       });
@@ -163,7 +163,7 @@ const Post = ({ post, onDeleted }) => {
     try {
       const res = await fetch(`${API_URL}/api/posts/comments/${commentId}`, {
         method: 'DELETE',
-        headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+        headers: { 'Authorization': `Bearer ${sessionStorage.getItem('token')}` }
       });
       if (res.ok) {
         setComments(prev => prev.filter(c => c.id !== commentId));

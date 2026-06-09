@@ -23,7 +23,7 @@ const Messages = () => {
   const fetchContacts = async () => {
     try {
       const res = await fetch(`${API_URL}/api/messages/contacts`, {
-        headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+        headers: { 'Authorization': `Bearer ${sessionStorage.getItem('token')}` }
       });
       if (res.ok) {
         const data = await res.json();
@@ -42,7 +42,7 @@ const Messages = () => {
     if (!contactId) return;
     try {
       const res = await fetch(`${API_URL}/api/messages/${contactId}`, {
-        headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+        headers: { 'Authorization': `Bearer ${sessionStorage.getItem('token')}` }
       });
       if (res.ok) {
         const data = await res.json();
@@ -115,7 +115,7 @@ const Messages = () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+          'Authorization': `Bearer ${sessionStorage.getItem('token')}`
         },
         body: JSON.stringify({ receiverId: selectedContact.id, content: tempText, message_type: 'text' })
       });
