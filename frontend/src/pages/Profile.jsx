@@ -4,6 +4,10 @@ import { Settings, MessageCircle, MoreHorizontal, Users, Calendar, MapPin, Mail,
 import { AuthContext } from '../context/AuthContext';
 import Post from '../components/Post';
 import Avatar from '../components/Avatar';
+import LevelChip from '../components/LevelChip';
+import GamificationPanel from '../components/GamificationPanel';
+import SkillsSection from '../components/SkillsSection';
+import PortfolioSection from '../components/PortfolioSection';
 import './Profile.css';
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
@@ -232,6 +236,7 @@ const Profile = () => {
           <div className="profile-details">
             <div className="profile-name-role">
               <h1>{profileUser.name}</h1>
+              <LevelChip level={profileUser.level || 1} size="lg" />
               {profileUser.role === 'PROFESSOR' && <span className="role-badge large">PROFESSOR</span>}
             </div>
             <p className="profile-handle">@{profileUser.name.toLowerCase().replaceAll(' ', '.')}</p>
@@ -255,6 +260,8 @@ const Profile = () => {
         
         <div className="profile-tabs">
           <button className={`tab ${activeTab === 'posts' ? 'active' : ''}`} onClick={() => setActiveTab('posts')}>Publicações</button>
+          <button className={`tab ${activeTab === 'skills' ? 'active' : ''}`} onClick={() => setActiveTab('skills')}>Habilidades</button>
+          <button className={`tab ${activeTab === 'portfolio' ? 'active' : ''}`} onClick={() => setActiveTab('portfolio')}>Portfólio</button>
           <button className={`tab ${activeTab === 'sobre' ? 'active' : ''}`} onClick={() => setActiveTab('sobre')}>Sobre</button>
           <button className={`tab ${activeTab === 'groups' ? 'active' : ''}`} onClick={() => setActiveTab('groups')}>Grupos</button>
           {isOwnProfile && (
@@ -296,8 +303,22 @@ const Profile = () => {
             )
           )}
 
-          {activeTab === 'sobre' && (
+          {activeTab === 'skills' && (
             <div className="card" style={{ padding: '20px' }}>
+              <SkillsSection userId={userId} isOwnProfile={isOwnProfile} />
+            </div>
+          )}
+
+          {activeTab === 'portfolio' && (
+            <div className="card" style={{ padding: '20px' }}>
+              <PortfolioSection userId={userId} isOwnProfile={isOwnProfile} />
+            </div>
+          )}
+
+          {activeTab === 'sobre' && (
+            <>
+              <GamificationPanel userId={userId} isOwnProfile={isOwnProfile} />
+              <div className="card" style={{ padding: '20px' }}>
               <h3>Sobre {profileUser.name}</h3>
               <p style={{ margin: '12px 0', fontSize: '15px' }}>{profileUser.bio || 'Usuário sem biografia.'}</p>
               <hr style={{ border: 'none', borderTop: '1px solid var(--border-color)', margin: '16px 0' }} />
@@ -312,6 +333,7 @@ const Profile = () => {
                 <div><Calendar size={14} style={{ verticalAlign: 'middle', marginRight: '6px' }} /><strong>Membro desde:</strong> {new Date(profileUser.created_at || Date.now()).toLocaleDateString('pt-BR')}</div>
               </div>
             </div>
+            </>
           )}
 
           {activeTab === 'groups' && (
