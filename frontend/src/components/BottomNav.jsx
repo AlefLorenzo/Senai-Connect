@@ -49,6 +49,7 @@ const BottomNav = () => {
             </div>
             <ul className="more-sheet-list">
               <li><Link to="/profile">Perfil</Link></li>
+              <li><Link to="/ranking">Ranking</Link></li>
               <li><Link to="/saved">Salvos</Link></li>
               <li><Link to="/files">Arquivos</Link></li>
               <li><Link to="/settings">Configurações</Link></li>

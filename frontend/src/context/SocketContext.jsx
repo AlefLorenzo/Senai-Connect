@@ -36,6 +36,18 @@ export const SocketProvider = ({ children }) => {
             setUnreadCount(prev => prev + 1);
         });
 
+        // Gamificação em tempo real → retransmitidos como eventos globais
+        // para o XpToast exibir "+XP", "Nível alcançado" e "Medalha conquistada"
+        socket.on('xp_gained', (data) => {
+            window.dispatchEvent(new CustomEvent('senai:xp_gained', { detail: data }));
+        });
+        socket.on('level_up', (data) => {
+            window.dispatchEvent(new CustomEvent('senai:level_up', { detail: data }));
+        });
+        socket.on('badge_unlocked', (data) => {
+            window.dispatchEvent(new CustomEvent('senai:badge_unlocked', { detail: data }));
+        });
+
         socket.on('profile_updated', (data) => {
             if (data.userId === user.id) {
                 const token = sessionStorage.getItem('token');

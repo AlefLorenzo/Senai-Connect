@@ -17,7 +17,10 @@ import PlaceholderPage from './pages/PlaceholderPage';
 import EventosPage from './pages/EventosPage';
 import CursosPage from './pages/CursosPage';
 import AvisosPage from './pages/AvisosPage';
+import Ranking from './pages/Ranking';
 import Auth from './pages/Auth/Auth';
+import AccessibilityMenu from './components/AccessibilityMenu';
+import XpToast from './components/XpToast';
 import './App.css';
 
 function App() {
@@ -41,13 +44,14 @@ function App() {
   // Layout principal para usuário logado
   return (
     <Router>
+      <a href="#conteudo-principal" className="skip-link">Pular para o conteúdo</a>
       <div className="app-layout">
         <Header />
         
         <div className="main-content-wrapper">
           <Sidebar />
           
-          <main className="center-feed">
+          <main className="center-feed" id="conteudo-principal">
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/feed" element={<Home />} />
@@ -57,6 +61,7 @@ function App() {
               <Route path="/events" element={<EventosPage />} />
               <Route path="/courses" element={<CursosPage />} />
               <Route path="/notices" element={<AvisosPage />} />
+              <Route path="/ranking" element={<Ranking />} />
               <Route path="/files" element={<Files />} />
               <Route path="/saved" element={<Saved />} />
               <Route path="/settings" element={<Settings />} />
@@ -71,6 +76,8 @@ function App() {
         </div>
         
         <BottomNav />
+        <AccessibilityMenu />
+        <XpToast />
       </div>
     </Router>
   );
