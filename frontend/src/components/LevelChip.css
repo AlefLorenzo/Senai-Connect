@@ -1,0 +1,35 @@
+.level-chip {
+  display: inline-flex;
+  align-items: center;
+  border-radius: var(--radius-full);
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+
+.level-chip--sm {
+  font-size: 0.68rem;
+  padding: 3px 8px;
+  margin-left: 6px;
+}
+
+.level-chip--lg {
+  font-size: 0.9rem;
+  padding: 6px 14px;
+}
+
+.level-chip--bronze  { background: #F3E2D3; color: #8C5A2B; }
+.level-chip--prata   { background: #E8EAED; color: #5F6368; }
+.level-chip--ouro    { background: #FEF3C7; color: #B45309; }
+.level-chip--platina { background: #DBEAFE; color: #1D4ED8; }
+.level-chip--diamante{ background: linear-gradient(90deg, #C7F0FF, #E5CCFF); color: #6D28D9; }
+
+html[data-contrast='high'] .level-chip--bronze,
+html[data-contrast='high'] .level-chip--prata,
+html[data-contrast='high'] .level-chip--ouro,
+html[data-contrast='high'] .level-chip--platina,
+html[data-contrast='high'] .level-chip--diamante {
+  background: #FFD500;
+  color: #000;
+}
