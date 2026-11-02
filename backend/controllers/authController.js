@@ -78,7 +78,7 @@ const authController = {
 
     me: async (req, res) => {
         try {
-            const [users] = await db.query('SELECT id, name, email, role, avatar, bio, cover_image, state, city, unit, area, course, links FROM users WHERE id = ?', [req.user.id]);
+            const [users] = await db.query('SELECT id, name, email, role, avatar, bio, cover_image, state, city, unit, area, course, links, xp, level FROM users WHERE id = ?', [req.user.id]);
             if (users.length === 0) return res.status(404).json({ error: 'Usuário não encontrado.' });
             res.status(200).json(users[0]);
         } catch (error) {

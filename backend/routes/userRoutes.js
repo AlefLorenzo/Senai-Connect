@@ -3,6 +3,10 @@ const router = express.Router();
 const userController = require('../controllers/userController');
 const { authenticateToken } = require('../middlewares/auth');
 
+// Preferências de acessibilidade (antes de /:id para não conflitar)
+router.get('/me/accessibility', authenticateToken, userController.getAccessibility);
+router.put('/me/accessibility', authenticateToken, userController.updateAccessibility);
+
 router.get('/:id', authenticateToken, userController.getProfile);
 router.put('/:id', authenticateToken, userController.updateProfile);
 router.get('/:id/posts', authenticateToken, userController.getUserPosts);
