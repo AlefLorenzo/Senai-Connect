@@ -1,0 +1,105 @@
+.gamification-panel { display: flex; flex-direction: column; gap: 16px; }
+
+/* Linha de nível + XP */
+.xp-row { display: flex; align-items: center; gap: 14px; }
+
+.level-circle {
+  width: 58px;
+  height: 58px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--senai-blue-primary), #00A3FF);
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0, 86, 210, 0.35);
+}
+.level-circle strong { font-size: 1.15rem; line-height: 1; }
+
+.xp-info { flex: 1; display: flex; flex-direction: column; gap: 6px; }
+.xp-numbers {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.xp-numbers > span:first-child {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: 700;
+  color: var(--senai-blue-dark);
+}
+.xp-next { font-size: 0.78rem; color: var(--text-secondary); }
+
+.xp-bar {
+  height: 10px;
+  border-radius: var(--radius-full);
+  background: #E4E6EB;
+  overflow: hidden;
+}
+.xp-bar-fill {
+  height: 100%;
+  border-radius: var(--radius-full);
+  background: linear-gradient(90deg, var(--senai-blue-primary), #00C2FF);
+  transition: width 0.6s ease;
+}
+html[data-contrast='high'] .xp-bar { background: #333; }
+html[data-contrast='high'] .xp-bar-fill { background: #FFD500; }
+
+/* Medalhas */
+.badges-block h4 { font-size: 0.95rem; margin-bottom: 10px; }
+.badges-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(88px, 1fr));
+  gap: 8px;
+}
+.badge-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 10px 6px;
+  border-radius: var(--radius-sm);
+  text-align: center;
+}
+.badge-item.earned {
+  background: var(--senai-blue-light);
+}
+.badge-item.locked {
+  background: var(--bg-main);
+  opacity: 0.45;
+  filter: grayscale(1);
+}
+.badge-icon { font-size: 1.5rem; }
+.badge-name {
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.2;
+}
+html[data-contrast='high'] .badge-item.locked { opacity: 0.8; filter: none; border: 1px dashed var(--border-color); }
+
+/* Histórico */
+.xp-history summary {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+.xp-history ul { margin-top: 8px; display: flex; flex-direction: column; gap: 4px; }
+.xp-history li {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  padding: 6px 8px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-main);
+}
+.xp-history li strong { color: var(--success); }

@@ -1,0 +1,160 @@
+.skills-section { display: flex; flex-direction: column; gap: 14px; }
+
+.skills-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.skills-header h3 { font-size: 1.05rem; }
+.skills-header .btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Formulário de adição */
+.skill-form {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  padding: 12px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-main);
+}
+.skill-search-wrapper { position: relative; flex: 1; min-width: 200px; }
+.skill-search-wrapper input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  font-size: 0.95rem;
+}
+.skill-suggestions {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-md);
+  z-index: 50;
+  overflow: hidden;
+}
+.skill-suggestions button {
+  width: 100%;
+  text-align: left;
+  padding: 10px 12px;
+  font-size: 0.9rem;
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+}
+.skill-suggestions button:hover { background: var(--senai-blue-light); }
+.skill-suggestions small { color: var(--text-secondary); }
+
+.skill-form select {
+  padding: 10px 12px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  font-size: 0.9rem;
+  background: var(--bg-card);
+  color: var(--text-primary);
+}
+
+.skills-empty { color: var(--text-secondary); font-size: 0.9rem; }
+
+/* Cards de skill */
+.skills-list { display: flex; flex-direction: column; gap: 10px; }
+
+.skill-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  background: var(--bg-card);
+}
+.skill-card.teacher-validated {
+  border-color: var(--senai-blue-primary);
+  background: linear-gradient(90deg, var(--senai-blue-light), var(--bg-card) 60%);
+}
+
+.skill-main { flex: 1; display: flex; flex-direction: column; gap: 6px; }
+.skill-title-row { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+.skill-category { font-size: 0.72rem; color: var(--text-secondary); }
+
+.skill-meta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.skill-proficiency {
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+}
+.prof-iniciante     { background: #F3F4F6; color: #4B5563; }
+.prof-intermediario { background: #FEF3C7; color: #92400E; }
+.prof-avancado      { background: #D1FAE5; color: #065F46; }
+
+.skill-teacher-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--senai-blue-dark);
+  background: #fff;
+  border: 1px solid var(--senai-blue-primary);
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+}
+
+.skill-endorsements {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+.skill-endorsers { display: flex; }
+.skill-endorsers .endorser-avatar {
+  width: 24px;
+  height: 24px;
+  margin-right: -6px;
+  border: 2px solid var(--bg-card);
+  border-radius: 50%;
+}
+
+.skill-actions { flex-shrink: 0; }
+
+.skill-endorse-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--senai-blue-primary);
+  color: var(--senai-blue-primary);
+  font-weight: 600;
+  font-size: 0.85rem;
+  transition: all 0.15s;
+}
+.skill-endorse-btn:hover { background: var(--senai-blue-light); }
+.skill-endorse-btn.endorsed {
+  background: var(--senai-blue-primary);
+  color: #fff;
+}
+
+.skill-remove {
+  color: var(--text-secondary);
+  padding: 6px;
+  border-radius: var(--radius-sm);
+}
+.skill-remove:hover { background: var(--hover-overlay); color: var(--error); }
+
+html[data-contrast='high'] .skill-card.teacher-validated {
+  background: var(--bg-card);
+  border-width: 2px;
+}
