@@ -1,10 +1,11 @@
 const db = require('../db');
+const gamificationHelper = require('../helpers/gamificationHelper');
 
 const postController = {
     getAll: async (req, res) => {
         try {
             const query = `
-                SELECT p.*, u.name as user_name, u.avatar as user_avatar, u.role as user_role,
+                SELECT p.*, u.name as user_name, u.avatar as user_avatar, u.role as user_role, u.level as user_level,
                 (SELECT COUNT(*) FROM post_likes WHERE post_id = p.id) as likes_count,
                 (SELECT COUNT(*) FROM comments WHERE post_id = p.id) as comments_count
                 FROM posts p
@@ -30,6 +31,9 @@ const postController = {
                 [userId, content, attachment_url, attachment_type, attachment_name]
             );
             
+            // Gamificação: publicar rende XP (não-bloqueante)
+            gamificationHelper.awardXp(userId, 'post_created', result.insertId);
+
             res.status(201).json({ id: result.insertId, message: 'Post criado com sucesso!' });
         } catch (error) {
             res.status(500).json({ error: 'Erro ao criar post' });
@@ -92,6 +96,8 @@ const postController = {
                         await notificationController.createNotification(
                             post[0].user_id, 'like', userId, parseInt(id), 'curtiu seu post.'
                         );
+                        // Gamificação: curtida recebida rende XP ao autor do post
+                        gamificationHelper.awardXp(post[0].user_id, 'like_received', parseInt(id));
                     }
                 } catch (notifError) {
                     console.error('Erro ao enviar notificação de like (não-bloqueante):', notifError);

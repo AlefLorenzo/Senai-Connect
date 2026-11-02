@@ -11,6 +11,9 @@ const noticeRoutes = require('./routes/noticeRoutes');
 const uploadRoutes = require('./routes/uploadRoutes');
 const notificationRoutes = require('./routes/notificationRoutes');
 const storyRoutes = require('./routes/storyRoutes');
+const gamificationRoutes = require('./routes/gamificationRoutes');
+const skillRoutes = require('./routes/skillRoutes');
+const projectRoutes = require('./routes/projectRoutes');
 const path = require('path');
 
 const socketHelper = require('./socketHelper');
@@ -40,6 +43,9 @@ app.use('/api/notices', noticeRoutes);
 app.use('/api/upload', uploadRoutes);
 app.use('/api/notifications', notificationRoutes);
 app.use('/api/stories', storyRoutes);
+app.use('/api/gamification', gamificationRoutes);
+app.use('/api/skills', skillRoutes);
+app.use('/api/projects', projectRoutes);
 
 // Serve uploaded files statically
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));

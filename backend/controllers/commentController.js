@@ -1,11 +1,12 @@
 const db = require('../db');
+const gamificationHelper = require('../helpers/gamificationHelper');
 
 const commentController = {
     getByPost: async (req, res) => {
         try {
             const { id } = req.params;
             const query = `
-                SELECT c.*, u.name as user_name, u.avatar as user_avatar
+                SELECT c.*, u.name as user_name, u.avatar as user_avatar, u.level as user_level
                 FROM comments c
                 JOIN users u ON c.user_id = u.id
                 WHERE c.post_id = ?
@@ -33,11 +34,14 @@ const commentController = {
 
             // Retornar o comentário criado para renderização imediata
             const [newComment] = await db.query(`
-                SELECT c.*, u.name as user_name, u.avatar as user_avatar
+                SELECT c.*, u.name as user_name, u.avatar as user_avatar, u.level as user_level
                 FROM comments c
                 JOIN users u ON c.user_id = u.id
                 WHERE c.id = ?
             `, [result.insertId]);
+
+            // Gamificação: comentar rende XP (não-bloqueante)
+            gamificationHelper.awardXp(userId, 'comment_created', result.insertId);
 
             // Notifica o dono do post (se não for ele mesmo)
             try {

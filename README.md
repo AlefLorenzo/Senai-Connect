@@ -1,5 +1,4 @@
 
-
 ---
 
 # 🚀 SENAI Connect
@@ -57,6 +56,29 @@ Tudo isso com **funcionalidades reais**, persistência de dados e navegação co
   * Comunicados institucionais
   * Agenda de eventos e atividades
 
+* 🏆 **Gamificação e reconhecimento**
+
+  * Sistema de XP por contribuição (posts, comentários, projetos, validações)
+  * Níveis com curva de progressão e selo de nível visível em posts e perfis
+  * Medalhas automáticas por conquistas (Pioneiro, Comunicador, Influente...)
+  * Ranking da comunidade com pódio e posições
+  * Notificações e toasts em tempo real (XP, nível, medalhas)
+
+* 🎓 **Perfil-portfólio com skills validadas**
+
+  * Habilidades técnicas com nível de proficiência
+  * Validação social de skills — com peso especial para professores ("Validada por professor")
+  * Portfólio de projetos com descrição, tags e links
+
+* ♿ **Acessibilidade total (WCAG)**
+
+  * Menu flutuante de acessibilidade em todas as telas
+  * Alto contraste, aumento de fonte (2 níveis) e fonte amigável para dislexia
+  * Redução de animações e modo simplificado (menos distrações)
+  * Leitura da página em voz alta (Web Speech API)
+  * Navegação por teclado com foco visível, skip-link e ARIA labels
+  * Preferências salvas por usuário (sincronizadas com o servidor)
+
 * 📱 **Interface responsiva**
 
   * Layout adaptado para mobile e desktop
@@ -80,8 +102,9 @@ Todos os elementos clicáveis executam ações reais, garantindo uma experiênci
 
 * **Frontend**: React / Next.js
 * **Backend**: Node.js + Express
-* **Banco de Dados**: PostgreSQL / MongoDB
+* **Banco de Dados**: MySQL
 * **Autenticação**: JWT
+* **Tempo real**: Socket.io (mensagens, notificações e gamificação)
 * **Estilização**: CSS Modules / Tailwind
 * **Versionamento**: Git + GitHub
 

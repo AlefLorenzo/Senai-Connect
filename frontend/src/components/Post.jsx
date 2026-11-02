@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { MoreHorizontal, ThumbsUp, MessageSquare, Share2, Bookmark, FileText, Trash2, Edit2, Send, X } from 'lucide-react';
 import { AuthContext } from '../context/AuthContext';
 import Avatar from './Avatar';
+import LevelChip from './LevelChip';
 import './Post.css';
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
@@ -196,6 +197,7 @@ const Post = ({ post, onDeleted }) => {
               <Link to={`/profile/${post.user_id}`} style={{ color: 'inherit', textDecoration: 'none' }}>
                 {post.user_name}
               </Link>
+              {post.user_level > 1 && <LevelChip level={post.user_level} />}
               {post.user_role === 'PROFESSOR' && <span className="role-badge">PROFESSOR</span>}
             </div>
             <div className="post-time">
@@ -330,6 +332,7 @@ const Post = ({ post, onDeleted }) => {
                         <div className="comment-bubble">
                           <div className="comment-bubble-header">
                             <span className="comment-user-name">{comment.user_name}</span>
+                            {comment.user_level > 1 && <LevelChip level={comment.user_level} />}
                             {user?.id === comment.user_id && (
                               <button className="delete-comment-btn" onClick={() => handleDeleteComment(comment.id)}>
                                 <Trash2 size={12} />

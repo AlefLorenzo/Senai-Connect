@@ -1,5 +1,6 @@
 const db = require('../db');
 const socketHelper = require('../socketHelper');
+const gamificationHelper = require('../helpers/gamificationHelper');
 
 const storyController = {
     // Busca stories das últimas 24h
@@ -61,6 +62,9 @@ const storyController = {
 
             // Emite via socket para todos
             socketHelper.broadcast('new_story', created[0]);
+
+            // Gamificação: publicar história rende XP (não-bloqueante)
+            gamificationHelper.awardXp(userId, 'story_created', result.insertId);
 
             res.status(201).json(created[0]);
         } catch (error) {

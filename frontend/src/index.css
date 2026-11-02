@@ -117,3 +117,106 @@ input, textarea {
     --right-panel-width: 0px;
   }
 }
+
+/* ============================================================
+   ACESSIBILIDADE — aplicado via atributos data-* no <html>
+   controlados pelo AccessibilityContext
+   ============================================================ */
+
+/* Tamanho da fonte (escala global via rem) */
+html[data-font-size='grande'] { font-size: 112.5%; } /* ~18px base */
+html[data-font-size='extra']  { font-size: 125%; }   /* ~20px base */
+
+/* Fonte amigável para dislexia: maior espaçamento e família sem serifa ampla */
+html[data-a11y-font='dyslexia'] body {
+  font-family: Verdana, 'Tahoma', Arial, sans-serif;
+  letter-spacing: 0.06em;
+  word-spacing: 0.12em;
+  line-height: 1.8;
+}
+
+/* Redução de movimento */
+html[data-motion='reduced'] *,
+html[data-motion='reduced'] *::before,
+html[data-motion='reduced'] *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+  scroll-behavior: auto !important;
+}
+
+/* Alto contraste */
+html[data-contrast='high'] {
+  --bg-main: #000000;
+  --bg-card: #111111;
+  --text-primary: #FFFFFF;
+  --text-secondary: #E8E8E8;
+  --border-color: #FFFFFF;
+  --hover-overlay: rgba(255, 255, 255, 0.15);
+  --senai-blue-light: #001f4d;
+  --senai-blue-primary: #4D9FFF;
+  --senai-blue-dark: #B3D4FF;
+  --shadow-sm: 0 0 0 2px #FFFFFF;
+  --shadow-md: 0 0 0 2px #FFFFFF;
+  --shadow-lg: 0 0 0 2px #FFFFFF;
+}
+html[data-contrast='high'] .btn-primary,
+html[data-contrast='high'] .a11y-fab {
+  background-color: #FFD500;
+  color: #000000;
+  box-shadow: 0 0 0 2px #000000;
+}
+html[data-contrast='high'] a { text-decoration: underline; }
+html[data-contrast='high'] img { filter: contrast(1.05); }
+
+/* Modo simplificado: esconde painéis laterais e reduz distrações visuais */
+html[data-mode='simplified'] .right-panel,
+html[data-mode='simplified'] .story-section,
+html[data-mode='simplified'] .sidebar-container {
+  display: none !important;
+}
+html[data-mode='simplified'] .center-feed {
+  max-width: 760px;
+  margin: 0 auto;
+}
+html[data-mode='simplified'] .card,
+html[data-mode='simplified'] .post-card {
+  box-shadow: none;
+  border: 1px solid var(--border-color);
+}
+
+/* Foco visível em TODOS os elementos interativos (navegação por teclado) */
+*:focus-visible {
+  outline: 3px solid var(--senai-blue-primary) !important;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+html[data-contrast='high'] *:focus-visible {
+  outline-color: #FFD500 !important;
+}
+
+/* Link "Pular para o conteúdo" — primeiro item tabulável da página */
+.skip-link {
+  position: fixed;
+  top: -60px;
+  left: 16px;
+  z-index: 2000;
+  background: var(--senai-blue-primary);
+  color: #fff;
+  padding: 10px 18px;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  transition: top 0.2s;
+}
+.skip-link:focus-visible {
+  top: 12px;
+}
+
+/* Respeita a preferência do sistema operacional por padrão */
+@media (prefers-reduced-motion: reduce) {
+  html:not([data-motion='normal']) * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
