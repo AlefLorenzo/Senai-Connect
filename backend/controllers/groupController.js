@@ -1,4 +1,5 @@
 const db = require('../db');
+const gamificationHelper = require('../helpers/gamificationHelper');
 
 const groupController = {
     getAll: async (req, res) => {
@@ -39,6 +40,9 @@ const groupController = {
                 'INSERT INTO group_members (group_id, user_id) VALUES (?, ?)',
                 [groupId, creatorId]
             );
+
+            // Gamificação: criar grupo rende XP (não-bloqueante)
+            gamificationHelper.awardXp(creatorId, 'group_created', groupId);
 
             res.status(201).json({ id: groupId, message: 'Grupo criado com sucesso!' });
         } catch (error) {
@@ -83,6 +87,9 @@ const groupController = {
                 'INSERT INTO group_members (group_id, user_id) VALUES (?, ?)',
                 [id, userId]
             );
+
+            // Gamificação: entrar em grupo rende XP (não-bloqueante)
+            gamificationHelper.awardXp(userId, 'group_joined', parseInt(id));
 
             res.status(200).json({ message: 'Entrou no grupo com sucesso!' });
         } catch (error) {
@@ -140,7 +147,7 @@ const groupController = {
             // Opcional: Validar se o usuário é membro do grupo para ver o feed.
             // Para maior simplicidade e melhor UX, deixaremos aberto ou validaremos.
             const query = `
-                SELECT p.*, u.name as user_name, u.avatar as user_avatar, u.role as user_role,
+                SELECT p.*, u.name as user_name, u.avatar as user_avatar, u.role as user_role, u.level as user_level,
                 (SELECT COUNT(*) FROM post_likes WHERE post_id = p.id) as likes_count,
                 (SELECT COUNT(*) FROM comments WHERE post_id = p.id) as comments_count,
                 EXISTS(SELECT 1 FROM post_likes WHERE post_id = p.id AND user_id = ?) as liked,
@@ -169,6 +176,9 @@ const groupController = {
                 'INSERT INTO posts (user_id, content, group_id, attachment_url, attachment_type, attachment_name) VALUES (?, ?, ?, ?, ?, ?)',
                 [userId, content, id, attachment_url, attachment_type, attachment_name]
             );
+
+            // Gamificação: postar no grupo também rende XP (não-bloqueante)
+            gamificationHelper.awardXp(userId, 'post_created', result.insertId);
 
             res.status(201).json({ id: result.insertId, message: 'Post publicado no grupo!' });
         } catch (error) {
